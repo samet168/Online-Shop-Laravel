@@ -82,11 +82,10 @@ const UserList = () => {
                         <tr>
                           <td>${value.id}</td>
                           <td>${value.name}</td>
-                          <td>${value.email}</td>
-                          <td>${value.role == 1 ? 'Admin' : 'User'}</td>
+                          <td>${value.status == 1 ? 'Admin' : 'User'}</td>
                           <td>
                             <a href="#" class="btn btn-primary btn-sm">view</a>
-                            <a href="javascript:void()" onClick = "DeleteUser(${value.id})" class="btn btn-danger btn-sm" >Delete</a>
+                            <a href="javascript:void()" onClick = "" class="btn btn-danger btn-sm" >Delete</a>
                           </td>
                         </tr>
                     `;
@@ -153,42 +152,6 @@ const StoreUser = (form) => {
     });
 }
 
-// const StoreUser = (form) => {
-//     let payloads = new FormData($(form)[0]);
-
-//     $.ajax({
-//         type: "POST",
-//         url: "{{ route('user.store') }}",
-//         data: payloads,
-//         dataType: "json",
-//         processData: false,
-//         contentType: false,
-//         success: function(response){
-//             if(response.status){ // true
-//                 $("#modalCreateUser").modal('hide');
-//                 $(form).trigger("reset");
-//                 $(form).find("input").removeClass("is-invalid").siblings("p").removeClass("text-danger").text("");
-//                 UserList(); 
-//                 Message(response.message); // Toast
-//             }
-//         },
-//         error: function(xhr){
-//             if(xhr.status === 422){ // validation errors
-//                 let errors = xhr.responseJSON.errors;
-//                 if(errors.name) $(".name").addClass('is-invalid').siblings("p").addClass("text-danger").text(errors.name);
-//                 else $(".name").removeClass('is-invalid').siblings('p').removeClass("text-danger").text("");
-
-//                 if(errors.email) $(".email").addClass('is-invalid').siblings("p").addClass("text-danger").text(errors.email);
-//                 else $(".email").removeClass('is-invalid').siblings('p').removeClass("text-danger").text("");
-
-//                 if(errors.password) $(".password").addClass('is-invalid').siblings("p").addClass("text-danger").text(errors.password);
-//                 else $(".password").removeClass('is-invalid').siblings('p').removeClass("text-danger").text("");
-//             } else if(xhr.status === 500){
-//                 alert("Internal server error, try again!");
-//             }
-//         }
-//     });
-// }
 
 const DeleteUser = (id) => {
    if(confirm("Do you want to delete this user?")) {

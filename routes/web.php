@@ -19,7 +19,7 @@ Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('u
 Route::get('/category',[CategoryController::class,'index'])->name('category.index');
 Route::get('/category/list',[CategoryController::class,'list'])->name('category.list');
 Route::Post('/category/store',[CategoryController::class,'store'])->name('category.store');
-Route::Post('/category/edit/{id}',[CategoryController::class,'edit'])->name('category.edit');
+Route::Post('/category/edit',[CategoryController::class,'edit'])->name('category.edit');
 Route::Post('/category/update/{id}',[CategoryController::class,'update'])->name('category.update');
 Route::delete('/category/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 Route::post('/category/upload', [CategoryController::class, 'upload'])->name('category.upload');

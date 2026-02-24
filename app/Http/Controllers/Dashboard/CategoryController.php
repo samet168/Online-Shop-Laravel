@@ -78,20 +78,46 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $Validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|unique:categories,name',
         ]);
         if($Validator->passes()){
 
             $category = new Category();
             $category->name = $request->name;
             // $category->image = $request->image;
+
+            //category image
+            if($request->input('category_image')){
+                    $tempDir = public_path('uploads/temp/'.$request->input('category_image'));
+                    $cateDir = public_path('uploads/category/'.$request->input('category_image'));
+                    if(File::exists($tempDir)){
+                        File::copy($tempDir, $cateDir);
+                        File::delete($tempDir);
+                    }
+                    $category->image = $request->input('category_image');
+            }
+
             $category->save();
+
             return response()->json([
-                'status' => true,
+                'status' => 200,
                 'message' => 'Category created successfully'
-            ],201);
+            ]);
+        }else{
+            return response()->json([
+                'status' => 422,
+                'errors' => $Validator->errors()
+            ]);
         }
 
+
+    }
+    public function list(){
+        $categories = Category::orderBy("id","DESC")->get();
+        return response([
+           'status' => 200,
+           'categories' => $categories
+        ]);
     }
 
     /**
@@ -105,24 +131,96 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request)
     {
-        //
+        $category = Category::find($request->id);
+        if(!$category){
+            return response()->json([
+                'status' => 404,
+                'message' => 'Category not found'
+            ]);
+        }
+        return response()->json([
+            'status' => 200,
+            'category' => $category
+        ]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
         //
+
+        $category = Category::find($request->id);
+        if(!$category){
+            return response()->json([
+                'status' => 404,
+                'message' => 'Category not found'
+            ]);
+        }
+        $Validator = Validator::make($request->all(), [
+            'name' => 'required|unique:categories,name',
+        ]);
+        if($Validator->passes()){
+
+            $category = new Category();
+            $category->name = $request->name;
+            // $category->image = $request->image;
+
+            //category image
+            if($request->input('category_image')){
+                    $tempDir = public_path('uploads/temp/'.$request->input('category_image'));
+                    $cateDir = public_path('uploads/category/'.$request->input('category_image'));
+                    if(File::exists($tempDir)){
+                        File::copy($tempDir, $cateDir);
+                        File::delete($tempDir);
+                    }
+                    $category->image = $request->input('category_image');
+            }
+
+            $category->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category created successfully'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 422,
+                'errors' => $Validator->errors()
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+public function destroy($id)
+{
+    $category = Category::find($id);
+    if(!$category){
+        return response()->json([
+            'status' => 404,
+            'message' => 'Category not found'
+        ]);
     }
+
+    // Delete image
+    if($category->image){
+        $path = public_path('uploads/category/'.$category->image);
+        if(File::exists($path)){
+            File::delete($path);
+        }
+    }
+
+    $category->delete();
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Category deleted successfully'
+    ]);
+}
 }

@@ -48,32 +48,7 @@ class UserController extends Controller
             ],201);
     }
 
-    //     public function store(Request $request){
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required',
-    //         'email' => 'required|email|unique:users,email',
-    //         'password' => 'required|min:6',
-    //     ]);
 
-    //     if($validator->fails()){
-    //         return response()->json([
-    //             'status' => false,
-    //             'errors' => $validator->errors()
-    //         ], 422); // use 422 for validation errors
-    //     }
-
-    //     $user = new User();
-    //     $user->name = $request->name;
-    //     $user->email = $request->email;
-    //     $user->password = Hash::make($request->password);
-    //     $user->role = $request->role ?? 0; // default role user
-    //     $user->save();
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'User created successfully'
-    //     ], 201); // 201 Created
-    // }
     public function destroy(Request $request){
         $user = User::find($request->id);
         

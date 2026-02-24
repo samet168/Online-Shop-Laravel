@@ -25,7 +25,7 @@
 
 
       {{-- Modal  start --}}
-      @include('back-end.messages.category.create')
+      @include('back-end.messages.category.edit')
       {{-- Modal end --}}
     
 
@@ -41,11 +41,12 @@
                 <tr> 
                   <th>Category ID</th>
                   <th>Category name</th>
+                  <th>image</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody >
+              {{-- <tbody class="categoryList">
                 <tr>
                   <td>1001</td>
                   <td>phument007</td>
@@ -54,8 +55,12 @@
                     <a href="#" class="btn btn-primary btn-sm">view</a>
                     <a href="#" class="btn btn-danger btn-sm">Delete</a>
                   </td>
+                 
                   
                 </tr>
+              </tbody> --}}
+              <tbody class="categoryList">
+
               </tbody>
             </table> 
           </div>
@@ -66,6 +71,39 @@
 @section('scripts')
 
 <script>
+  
+const ListCategory = () => {
+    $.ajax({
+        type: "GET",
+        url: "{{ route('category.list') }}",
+        dataType: "json",
+        success: function (response) {
+            if(response.status == 200){
+                let categories = response.categories;
+                let tr = ''; // define variable before using
+                $.each(categories, function(key,value){
+                    tr += `
+                        <tr>
+                          <td>${value.id}</td>
+                          <td>${value.name}</td>
+                          <td>
+                            <img src="uploads/category/${value.image}" alt="" style="width: 50px; height: 50px;">
+                          </td>
+                          <td>${value.status == 1 ? 'Active' : 'blocked'}</td>
+                          <td>
+                            <a href="javascript:void(0)" onClick="EditCategory(${value.id})" data-bs-toggle="modal" data-bs-target="#modalUpdateCategory" class="btn  btn-primary btn-sm">Edit</a>
+                            <a href="javascript:void(0)" onClick="DeleteCategory(${value.id})" class="btn btn-danger btn-sm">Delete</a>
+                          </td>
+                        </tr>
+                    `;
+                });
+                $('.categoryList').html(tr); // inject rows
+            }
+        }
+    });
+}
+
+ListCategory();
 const uploadImage = (form) =>{
     let payload = new FormData($(form)[0]);
 
@@ -81,6 +119,7 @@ const uploadImage = (form) =>{
 
            if(response.status === true){
               let img = `
+               <input type="hide" name='category_image' value="${response.image}">
                   <div class="image-preview d-flex align-items-center mt-2">
                       <img src="/uploads/temp/${response.image}" alt="category" width="100" class="img-thumbnail me-2">
 
@@ -89,7 +128,7 @@ const uploadImage = (form) =>{
               `;
 
               $(".show-image-category").html(img);
-              $(form).trigger('reset');
+              // $(form).trigger('reset');
                  $(selector).removeClass("is-invalid").siblings('p').removeClass("text-danger").text("");
 
           }else{
@@ -117,7 +156,7 @@ const cancelImage = (img) =>{
   }
 }
 const storeCategory = (form) => {
-  let payload = new FormData($(form)[0]);
+ let payload = new FormData($(form)[0]);
   $.ajax({
     type: "POST",
     url: "{{ route('category.store') }}",
@@ -126,9 +165,78 @@ const storeCategory = (form) => {
     processData: false,
     contentType: false,
     success: function (response) {
+      if(response.status==200){
+        $("#modalCreateCategory").modal('hide');
+        // $(form).trigger("reset");
+        $(".show-image-category").html('');
+        $('.name').removeClass("is-invalid").siblings('p').removeClass("text-danger").text("");
+        ListCategory();
+        Message(response.message);
+      }else{
+        let error =response.errors;
+        $('.name').addClass("is-invalid").siblings('p').addClass("text-danger").text(error.name);
+
+      }
       
     }
   });
+}
+
+const DeleteCategory = (id) => {
+   if(confirm("Do you want to delete this category?")) {
+       $.ajax({
+           type: "DELETE",
+           url: "/category/destroy/" + id, // append id
+           data: {
+               _token: "{{ csrf_token() }}" // ចាំបាច់សម្រាប់ DELETE
+           }, 
+           dataType: "json",
+           success: function(response){
+               if(response.status == 200){
+                   ListCategory(); // refresh table
+                   Message(response.message);
+               } else {
+                   Message(response.message);
+               }
+           }
+       });
+   }
+}
+const EditCategory = (id) => {
+  $.ajax({
+    type: "POST",
+    url: "{{ route('category.edit') }}",
+    data: { id: id },
+    dataType: "json",
+
+    success: function (response) {
+      if(response.status == 200){
+          $('.name').val(response.category.editName);
+
+          
+      }
+      
+    }
+  });
+
+const UpdateCategory = (form, id) => {
+  let payload = new FormData($(form)[0]);
+  $.ajax({
+    type: "POST",
+    url: "/category/update/" + id, // <-- ផ្ដល់ id នៅទីនេះ
+    data: payload,
+    dataType: "json",
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      if(response.status==200){
+        $('.name').val(response.category.name);
+      }
+    }
+  });
+}
+ 
+
 }
 </script>
 @endsection
