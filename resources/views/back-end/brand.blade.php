@@ -160,6 +160,42 @@ const EditBrand = (id, name, category_id, status) => {
   $('#modalUpdateBrand').modal('show');
 }
 
+const UpdataBrand = (form) => {
+
+    let payload = new FormData($(form)[0]);
+
+    $.ajax({
+        type: "POST",
+        url: "{{ route('brand.update') }}",   // កែត្រង់នេះ
+        data: payload,
+        contentType: false,
+        processData: false,
+        success: function(response){
+            console.log(response);
+
+            if(response.status == 200){
+                $("#modalUpdateBrand").modal('hide');
+                $(form).trigger('reset');
+                $('.name_edit')
+                    .removeClass("is-invalid")
+                    .siblings('p')
+                    .removeClass("text-danger")
+                    .text("");
+                Message(response.message);
+                BrandList();
+            }else{
+                let error = response.errors;
+                $('.name_edit')
+                    .addClass("is-invalid")
+                    .siblings('p')
+                    .addClass("text-danger")
+                    .text(error.name);
+            }
+        }
+    });
+
+}
+
 
 
 
