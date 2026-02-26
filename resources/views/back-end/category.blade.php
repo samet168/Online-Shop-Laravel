@@ -25,8 +25,10 @@
 
 
       {{-- Modal  start --}}
-      @include('back-end.messages.category.edit')
+      @include('back-end.messages.category.create')
       {{-- Modal end --}}
+
+      @include('back-end.messages.category.edit')
     
 
       <div class="col-lg-12 grid-margin stretch-card">
@@ -44,6 +46,7 @@
                   <th>image</th>
                   <th>Status</th>
                   <th>Action</th>
+
                 </tr>
               </thead>
               {{-- <tbody class="categoryList">
@@ -139,6 +142,7 @@ const uploadImage = (form) =>{
     });
 }
 
+
 const cancelImage = (img) =>{
   if(confirm("Are you sure you want to cancel?")) {
     $.ajax({
@@ -202,6 +206,7 @@ const DeleteCategory = (id) => {
        });
    }
 }
+
 const EditCategory = (id) => {
   $.ajax({
     type: "POST",
@@ -211,7 +216,20 @@ const EditCategory = (id) => {
 
     success: function (response) {
       if(response.status == 200){
-          $('.name').val(response.category.editName);
+          $('.editName').val(response.category.name);
+          $('#category_id').val(response.category.id);
+            if(response.category.image != null){
+
+                let img = `
+                    <div class="image-preview d-flex align-items-center mt-2">
+                        
+                               <input type="hidden" name="cate_old_image" value="${response.category.image}">
+                               <img style="width:400px;" src="{{ asset('uploads/category/${response.category.image}') }}">
+                    </div>
+                `;
+
+                $(".show-edit-image").html(img);
+            }
 
           
       }
@@ -219,24 +237,83 @@ const EditCategory = (id) => {
     }
   });
 
-const UpdateCategory = (form, id) => {
-  let payload = new FormData($(form)[0]);
-  $.ajax({
-    type: "POST",
-    url: "/category/update/" + id, // <-- ផ្ដល់ id នៅទីនេះ
-    data: payload,
-    dataType: "json",
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      if(response.status==200){
-        $('.name').val(response.category.name);
-      }
-    }
-  });
 }
- 
 
+
+// const UpdateCategory = (form) => {
+
+//     let payload = new FormData($(form)[0]);
+
+//     $.ajax({
+//         type: "POST",
+//         url: "{{ route('category.update') }}", // ✅ FIX HERE
+//         data: payload,
+//         dataType: "json",
+//         processData: false,
+//         contentType: false,
+
+//         success: function (response) {
+
+//             if(response.status == 200){
+
+//                 $("#modalUpdateCategory").modal('hide');
+//                 $(".show-edit-image").html('');
+//                 $('.name').removeClass("is-invalid")
+//                           .siblings('p')
+//                           .removeClass("text-danger")
+//                           .text("");
+
+//                 Message(response.message);
+//                 ListCategory();
+
+//             }else{
+
+//                 let error = response.errors;
+
+//                 $('.name')
+//                     .addClass("is-invalid")
+//                     .siblings('p')
+//                     .addClass("text-danger")
+//                     .text(error.name);
+
+//             }
+//         }
+//     });
+// }
+
+const UpdateCategory = (form) => {
+    let payload = new FormData($(form)[0]);
+
+    $.ajax({
+        type: "POST",
+        url: "{{ route('category.update') }}",
+        data: payload,
+        dataType: "json",
+        processData: false,
+        contentType: false,
+
+        success: function (response) {
+            if(response.status==200){
+                $("#modalUpdateCategory").modal('hide');
+                $(".show-edit-image").html('');
+                $('.name').removeClass("is-invalid")
+                          .siblings('p')
+                          .removeClass("text-danger")
+                          .text("");
+                Message(response.message);
+                ListCategory();
+            } else {
+                let error = response.errors;
+                $('.name').addClass("is-invalid")
+                          .siblings('p')
+                          .addClass("text-danger")
+                          .text(error.name);
+            }
+        },
+        error: function(xhr){
+            console.log(xhr.responseText); // 👈 debug 500
+        }
+    });
 }
 </script>
 @endsection

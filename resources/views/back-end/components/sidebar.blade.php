@@ -32,6 +32,12 @@
           <span class="menu-title">Category</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('brand.index') }}">
+          <i class="menu-icon typcn typcn-document-text"></i>
+          <span class="menu-title">Brand</span>
+        </a>
+      </li>
 
     </ul>
   </nav>

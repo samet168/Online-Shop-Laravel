@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\BrandController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,16 @@ Route::get('/category',[CategoryController::class,'index'])->name('category.inde
 Route::get('/category/list',[CategoryController::class,'list'])->name('category.list');
 Route::Post('/category/store',[CategoryController::class,'store'])->name('category.store');
 Route::Post('/category/edit',[CategoryController::class,'edit'])->name('category.edit');
-Route::Post('/category/update/{id}',[CategoryController::class,'update'])->name('category.update');
+Route::Post('/category/update',[CategoryController::class,'update'])->name('category.update');
 Route::delete('/category/destroy/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 Route::post('/category/upload', [CategoryController::class, 'upload'])->name('category.upload');
 Route::post('/category/cancel', [CategoryController::class, 'cancel'])->name('category.cancel');
+
+
+//Brand Router
+Route::get('/brand',[BrandController::class,'index'])->name('brand.index');
+Route::get('/brand/list',[BrandController::class,'list'])->name('brand.list');
+Route::Post('/brand/store',[BrandController::class,'store'])->name('brand.store');
+Route::Post('/brand/edit',[BrandController::class,'edit'])->name('brand.edit');
+Route::Post('/brand/update',[BrandController::class,'update'])->name('brand.update');
+Route::delete('/brand/destroy/{id}', [BrandController::class, 'destroy'])->name('brand.destroy');

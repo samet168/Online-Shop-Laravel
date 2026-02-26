@@ -6,22 +6,23 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-           <form method="POST" class="formUpdateCategory" enctype="multipart/form-data">
+           <form method="POST" id="formUpdateCategory" enctype="multipart/form-data">
 
                 <div class="form-group">
+                    <input type="hidden" id="category_id" name="category_id">
                    <label for="">Category Name</label>
-                   <input type="text" name="name" class="editName form-control" id="">
+                   <input type="text" name="name" class="name editName form-control" id="">
                    <p></p>
                 </div>
 
                 <div class="form-group">
                   <label for="">Image</label>
-                  <input type="file" name="image" class="ediIimage form-control" id="">
+                  <input type="file" name="image" class="image form-control" id="">
                   <p></p>
-                  <button type="button" onclick="uploadImage('.formCreateCategory')"  class="btn btn_upload btn-success rounded-0">update</button>
+                  <button type="button" onclick="uploadImage('#formUpdateCategory')" class="btn btn_upload btn-success rounded-0">update</button>
                 </div>
 
-                <div class="show-image-category">
+                <div class="show-edit-image show-image-category">
 
                 </div>
                 
@@ -39,7 +40,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" onclick="UpdateCategory('.formUpdateCategory')" class="btn btn-primary">Save</button>
+          <button type="button" onclick="UpdateCategory('#formUpdateCategory')" class="btn btn-primary">Update</button>
         </div>
       </div>
     </div>

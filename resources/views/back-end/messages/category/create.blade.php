@@ -21,7 +21,7 @@
                   <button type="button" onclick="uploadImage('.formCreateCategory')"  class="btn btn_upload btn-success rounded-0">update</button>
                 </div>
 
-                <div class="show-image-category">
+                <div class="show-image-category show-edit-image ">
 
                 </div>
                 
