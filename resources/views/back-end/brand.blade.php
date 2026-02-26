@@ -27,43 +27,33 @@
                 </tr>
               </thead>
               <tbody class="brand_list">
-                 {{-- <tr>
-                    <td>B001</td>
-                    <td>Vivo</td>
-                    <th>Phone</th>
-                    <th>
-                        <span class="badge badge-success p-1">Active</span>
-                        <span class="badge badge-danger  p-1">Inactive</span>
-                    </th>
-                    <th>
-                        <button type="button" class=" btn btn-info  btn-sm" data-bs-toggle="modal" data-bs-target="#modalUpdateBrand">Edit</button>
-                        <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                    </th>
-                 </tr> --}}
               </tbody>
-
             </table>
-            <div class="d-flex justify-content-between align-items-center">
 
-                <div class="show-page mt-3">
+            
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="show-page"></div>
 
-                </div>
-
-                <button onclick="BrandRefresh()" class=" btn btn-outline-danger rounded-0 btn-sm">refresh</button>
-
+                <button onclick="BrandRefresh()" 
+                    class="btn btn-outline-danger rounded-0 btn-sm">
+                    refresh
+                </button>
             </div>
           </div>
         </div>
+
       </div>
+
 @endsection
 
 @section('scripts')
 <script>
 
-const BrandList = () => {
+const BrandList = (page=1) => {
   $.ajax({
     type: "GET",
     url: "{{ route('brand.list') }}",
+    data: { page: page },
     dataType: "json",
     success: function(response) {
       console.log(response);
@@ -102,15 +92,55 @@ const BrandList = () => {
 
       // Insert all rows into tbody
       $(".brand_list").html(tr);
+      let page =``;
+      let totalPage = response.page.totalPage;
+      let currentPage = response.page.currentPage;
+      page =`
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li onclick="BackPage(${currentPage})" class="page-item ${(1 == currentPage) ? 'd-none' : ''}">
+                  <a class="page-link" href="javascript:void(0);" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>`;
+                for(let i = 1; i <= totalPage; i++){
+                  page += `
+                      <li onclick="BrandPage(${i})" class="page-item ${(i== currentPage) ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0);">${i}</a>
+                      </li>
+
+                  `
+                }
+              
+                page +=`<li onclick="NexPage(${totalPage})" class="page-item ${(totalPage == currentPage) ? 'd-none' : ''}">
+                  <a class="page-link" href="javascript:void(0);" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+      `;
+      $(".show-page").html(page);
     },
-    error: function(xhr) {
-      console.log(xhr.responseText);
-    }
+   
+
   });
 }
-
-// Call function to display brands
 BrandList();
+const BrandPage = (page)=>{
+
+  BrandList(page);
+}
+const NexPage = (page) => {
+
+  BrandList(page);
+  
+}
+const BackPage =(page) =>{
+  BrandList(page - 1);  
+}
+
+
 
 
 const BrandStore = (form) => {

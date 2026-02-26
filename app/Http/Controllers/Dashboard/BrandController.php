@@ -17,13 +17,34 @@ class BrandController extends Controller
     }
     
     public function list(Request $request){
-        $brands = Brand::orderBy('id','desc')->with('category')->get();
+        //pagination
+        $limit = 5;
+        $page = $request->page;  // default 1
+        $offset = ($page - 1) * $limit;
+        // $brands = Brand::orderBy('id','desc')->with('category')->get();
+        $brands = Brand::orderBy('id','desc')->
+        with('category')
+        ->limit(5)
+        ->offset($offset)
+        ->get();
+
+
+        //total records
+        $totalRecords = Brand::count();
+        $totalPage = ceil($totalRecords/5);
         return response()->json([
             'status' => 200,
+            'page' => [
+
+                'totalPage' => $totalPage,
+                'currentPage' => $page,
+                'totalRecords' => $totalRecords,
+            ],
             'brands' => $brands
         ]);
 
     }
+
     public function store(Request $request){
         $Validator = Validator::make($request->all(), [
             'name' => 'required|unique:brands,name',
