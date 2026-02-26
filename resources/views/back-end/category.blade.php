@@ -122,12 +122,23 @@ const uploadImage = (form) =>{
 
            if(response.status === true){
               let img = `
-               <input type="hide" name='category_image' value="${response.image}">
-                  <div class="image-preview d-flex align-items-center mt-2">
-                      <img src="/uploads/temp/${response.image}" alt="category" width="100" class="img-thumbnail me-2">
+                    <div class="image-preview-wrapper mt-2">
+                      <input type="hidden" name="category_image" value="${response.image}">
+                      <div class="d-flex align-items-center gap-2">
+                        <!-- Preview Image -->
+                        <img src="/uploads/temp/${response.image}" 
+                            alt="category" 
+                            class="img-thumbnail" 
+                            style="width: 100px; height: 100px; object-fit: cover;">
 
-                      <button type="button" onClick="cancelImage('${response.image}')" class="btn btn-danger btn-cancel-preview">Cancel </button>
-                  </div>
+                        <!-- Cancel Button -->
+                        <button type="button" 
+                                class="btn btn-sm btn-danger" 
+                                onclick="cancelImage('${response.image}')">
+                          <i class="bi bi-x-circle me-1"></i> Cancel
+                        </button>
+                      </div>
+                    </div>
               `;
 
               $(".show-image-category").html(img);
@@ -221,10 +232,20 @@ const EditCategory = (id) => {
             if(response.category.image != null){
 
                 let img = `
-                    <div class="image-preview d-flex align-items-center mt-2">
-                        
-                               <input type="hidden" name="cate_old_image" value="${response.category.image}">
-                               <img style="width:400px;" src="{{ asset('uploads/category/${response.category.image}') }}">
+                    <div class="image-preview-wrapper mt-3">
+                      <!-- Hidden input to store old image -->
+                      <input type="hidden" name="cate_old_image" value="${response.category.image}">
+
+                      <div class="d-flex flex-column align-items-center gap-2">
+                          <!-- Image preview -->
+                          <img src="/uploads/category/${response.category.image}" 
+                              alt="Category Image" 
+                              class="img-fluid rounded shadow-sm" 
+                              style="max-width: 400px; max-height: 300px; object-fit: cover;">
+
+                          <!-- Optional info / text -->
+                          <small class="text-muted">Current Category Image</small>
+                      </div>
                     </div>
                 `;
 

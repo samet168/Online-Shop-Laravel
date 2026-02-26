@@ -22,28 +22,36 @@ class BrandController extends Controller
         $page = $request->page;  // default 1
         $offset = ($page - 1) * $limit;
         // $brands = Brand::orderBy('id','desc')->with('category')->get();
-        $brands = Brand::orderBy('id','desc')->
-        with('category')
-        ->limit(5)
-        ->offset($offset)
-        ->get();
+        if(!empty($request->search)){
+            $brand = Brand::where('name','like','%'.$request->search.'%')->with('category')
+                                ->limit($limit)
+                                ->offset($offset)
+                                ->get();
+            $totalRecords = Brand::where('name','like','%'.$request->search.'%')->count();
+        }else{
 
+            $brand = Brand::with('category')
+                                ->limit($limit)
+                                ->offset($offset)
+                                ->get();
+
+            $totalRecords = Brand::count();
+        }
 
         //total records
-        $totalRecords = Brand::count();
         $totalPage = ceil($totalRecords/5);
         return response()->json([
             'status' => 200,
             'page' => [
-
                 'totalPage' => $totalPage,
                 'currentPage' => $page,
                 'totalRecords' => $totalRecords,
             ],
-            'brands' => $brands
+            'brands' => $brand
         ]);
 
     }
+
 
     public function store(Request $request){
         $Validator = Validator::make($request->all(), [

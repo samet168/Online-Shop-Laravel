@@ -31,12 +31,35 @@
     {{-- Select 2 --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
+    {{-- bootstrap icon --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
     @yield('styles')
 
   </head>
   <body>
-    <div class="container-scroller">
 
+    <div class="container-scroller">
+{{-- Modal --}}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+
+<!-- Centered Modal with input and search button -->
+<div class="modal fade" id="modalSearch" tabindex="-1" aria-labelledby="modalSearchLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-4">
+        <input type="text" class="form-control mb-2" placeholder="Type to search..." name="search" id="search">
+        <button class="btn btn-primary w-100 searchBtn" id="searchBtn">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{-- end Modal --}}
       <!-- partial:partials/_navbar.html -->
       @include('back-end.components.navbar')
       <!-- partial -->

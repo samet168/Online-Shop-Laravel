@@ -41,11 +41,20 @@
           </div>
         </li>
       </ul>
-      <form class="ml-auto search-form d-none d-md-block" action="#">
-        <div class="form-group">
-          <input type="search" class="form-control" placeholder="Search Here">
-        </div>
-      </form>
+
+
+<form class="ml-auto search-form d-none d-md-block" action="#">
+  <div class="form-group position-relative text-center">
+    <!-- Search Icon inside input -->
+    <button type="button" class="btn position-absolute"
+            style="top: 50%; left: 15px; transform: translateY(-50%); color: #999;"
+            data-bs-toggle="modal" data-bs-target="#modalSearch">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+</form>
+
+
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link count-indicator" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">

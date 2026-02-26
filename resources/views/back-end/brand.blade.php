@@ -49,11 +49,15 @@
 @section('scripts')
 <script>
 
-const BrandList = (page=1) => {
+const BrandList = (page=1, search="") => {
   $.ajax({
     type: "GET",
     url: "{{ route('brand.list') }}",
-    data: { page: page },
+    data: { 
+      page: page ,
+      search: search
+            
+    },
     dataType: "json",
     success: function(response) {
       console.log(response);
@@ -140,7 +144,17 @@ const BackPage =(page) =>{
   BrandList(page - 1);  
 }
 
+//search event
+$(document).on("click", ".searchBtn", function(){
+  let search = $("#search").val();
+  BrandList(1, search);
+  $('#modalSearch').modal('hide');
+})
 
+const BrandRefresh = () => {
+ BrandList();
+ $('.search').val('');
+}
 
 
 const BrandStore = (form) => {
