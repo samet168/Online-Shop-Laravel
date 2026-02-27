@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
+<nav class="sidebar sidebar-offcanvas " id="sidebar">
     <ul class="nav">
       <li class="nav-item nav-profile">
         <a href="#" class="nav-link">
@@ -14,7 +14,7 @@
       </li>
       <li class="nav-item nav-category">Main Menu</li>
       <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{ route('dashboard.index') }}">
           <i class="menu-icon typcn typcn-document-text"></i>
           <span class="menu-title">Dashboard</span>
         </a>
@@ -48,3 +48,6 @@
 
     </ul>
   </nav>
+
+
+  

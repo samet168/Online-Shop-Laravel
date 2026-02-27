@@ -13,6 +13,9 @@ class AuthController extends Controller
     //
     public function login(){
         if(Auth::check()){
+            if(Auth::user()->role == 1){
+                return redirect()->route('dashboard.index');
+            }
             return redirect()->route('category.index');
         }
         return view('back-end.login');
@@ -27,8 +30,11 @@ public function authenticate (Request $request){
         $credentials = $request->only('email','password');
         if(Auth::attempt($credentials)){
             if(Auth::user()->role == 'admin'){
+                return redirect()->intended(route('dashboard.index'))->with("success","Login successfully");
+            }elseif(Auth::user()->role == 'user'){
                 return redirect()->intended(route('category.index'))->with("success","Login successfully");
-            }else{
+            }
+            else{
                 return redirect()->intended(route('user.index'));
             }
         } else {

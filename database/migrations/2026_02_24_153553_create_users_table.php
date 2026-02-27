@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string("image")->nullable();
-            $table->enum("role",[1,2,3]);
+            $table->enum("role",[1,2,3])->default(1);
             //Comment 1 : Admin Dashboard , 2.Customer 
             $table->timestamps();
         });

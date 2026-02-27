@@ -90,7 +90,7 @@ const ListCategory = () => {
                           <td>${value.id}</td>
                           <td>${value.name}</td>
                           <td>
-                            <img src="uploads/category/${value.image}" alt="" style="width: 50px; height: 50px;">
+                            <img src="{{ asset('uploads/category/${value.image}') }}">
                           </td>
                           <td>${value.status == 1 ? 'Active' : 'blocked'}</td>
                           <td>
@@ -143,7 +143,7 @@ const uploadImage = (form) =>{
 
               $(".show-image-category").html(img);
               // $(form).trigger('reset');
-                 $(selector).removeClass("is-invalid").siblings('p').removeClass("text-danger").text("");
+                 $('.image').removeClass("is-invalid").siblings('p').removeClass("text-danger").text("");
 
           }else{
             let errors = response.errors;
@@ -237,7 +237,7 @@ const EditCategory = (id) => {
                       <input type="hidden" name="cate_old_image" value="${response.category.image}">
 
                       <div class="d-flex flex-column align-items-center gap-2">
-                          <!-- Image preview -->
+                          
                           <img src="/uploads/category/${response.category.image}" 
                               alt="Category Image" 
                               class="img-fluid rounded shadow-sm" 

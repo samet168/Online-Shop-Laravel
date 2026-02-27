@@ -4,8 +4,10 @@ use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\BrandController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ColorController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\DashboardMiddleware;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -22,13 +24,19 @@ Route::group(['prefix' => 'admin'], function () {
 
     
         Route::get('/logout',[AuthController::class,'logout'])->name('auth.logout');
-        //user Router
-        Route::get('/user',[UserController::class,'index'])->name('user.index');
-        Route::get('/user/list',[UserController::class,'list'])->name('user.list');
-        Route::Post('/user/store',[UserController::class,'store'])->name('user.store');
-        Route::Post('/user/edit/{id}',[UserController::class,'edit'])->name('user.edit');
-        Route::Post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
-        Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+        Route::middleware(DashboardMiddleware::class)->group(function () {
+            Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.index');
+                    //user Router
+            Route::get('/user',[UserController::class,'index'])->name('user.index');
+            Route::get('/user/list',[UserController::class,'list'])->name('user.list');
+            Route::Post('/user/store',[UserController::class,'store'])->name('user.store');
+            Route::Post('/user/edit/{id}',[UserController::class,'edit'])->name('user.edit');
+            Route::Post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
+            Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+        });
+        
+
 
 
         //category Router
