@@ -59,6 +59,7 @@
 
 @section('scripts')
 <script>
+    
     const ColorList = (page = 1, search = '') => {
 
     $.ajax({
