@@ -9,52 +9,47 @@
       @include('back-end.messages.color.edit')
       {{-- Modal edit start --}}
 
-      <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3>Colors</h3>
-                <p data-bs-toggle="modal" data-bs-target="#modalCreateColor" class="card-description btn btn-primary ">new color</p>
-            </div>
-            <table class="table table-striped mb-3">
-              <thead>
-                <tr> 
-                  <th>Color ID</th>
-                  <th>Name</th>
-                  <th>Color</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody class="colors_list">
-                 {{-- <tr>
-                    <td>B001</td>
-                    <td>Vivo</td>
-                    <th>Phone</th>
-                    <th>
-                        <span class="badge badge-success p-1">Active</span>
-                        <span class="badge badge-danger  p-1">Inactive</span>
-                    </th>
-                    <th>
-                        <button type="button" class=" btn btn-info  btn-sm" data-bs-toggle="modal" data-bs-target="#modalUpdateBrand">Edit</button>
-                        <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                    </th>
-                 </tr> --}}
-              </tbody>
+<div class="col-12 col-md-12 col-lg-12 grid-margin stretch-card">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
 
-            </table>
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div class="show-page mt-3">
-
-                </div>
-
-                <button onclick="ColorRefresh()" class=" btn btn-outline-danger rounded-0 btn-sm">refresh</button>
-
-            </div>
-          </div>
-        </div>
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="card-title text-primary">Colors</h3>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCreateColor">
+          + New Color
+        </button>
       </div>
+
+      <!-- Responsive Table -->
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-3">
+          <thead class="table-light text-secondary">
+            <tr>
+              <th>#ID</th>
+              <th>Name</th>
+              <th>Color</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="colors_list">
+            <!-- JS will inject rows here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer: pagination + refresh -->
+      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+        <div class="show-page"></div>
+        <button onclick="ColorRefresh()" class="btn btn-outline-danger btn-sm rounded-0">
+          🔄 Refresh
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('scripts')

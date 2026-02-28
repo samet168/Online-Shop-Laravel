@@ -21,12 +21,6 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="{{ route('user.index') }}">
-          <i class="menu-icon typcn typcn-document-text"></i>
-          <span class="menu-title">users</span>
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="{{ route('category.index') }}">
           <i class="menu-icon typcn typcn-document-text"></i>
           <span class="menu-title">Category</span>
@@ -42,6 +36,12 @@
         <a class="nav-link" href="{{ route('color.index') }}">
           <i class="menu-icon typcn typcn-document-text"></i>
           <span class="menu-title">Color</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('product.index') }}">
+          <i class="menu-icon typcn typcn-document-text"></i>
+          <span class="menu-title">product</span>
         </a>
       </li>
 

@@ -29,13 +29,13 @@ public function authenticate (Request $request){
     if($validator->passes()){
         $credentials = $request->only('email','password');
         if(Auth::attempt($credentials)){
-            if(Auth::user()->role == 'admin'){
+            if(Auth::user()->role == 1){
                 return redirect()->intended(route('dashboard.index'))->with("success","Login successfully");
-            }elseif(Auth::user()->role == 'user'){
+            }elseif(Auth::user()->role == 2){
                 return redirect()->intended(route('category.index'))->with("success","Login successfully");
             }
             else{
-                return redirect()->intended(route('user.index'));
+                return redirect()->back()->withInput()->with("error","You don't have permission to access this page");
             }
         } else {
             return redirect()->back()->withInput()->with("error","Invalid email or password");

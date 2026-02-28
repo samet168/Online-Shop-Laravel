@@ -31,41 +31,36 @@
       @include('back-end.messages.category.edit')
     
 
-      <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
+      <div class="col-12 col-md-12 col-lg-12 grid-margin stretch-card">
+        <div class="card shadow-sm border-0">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 >Category</h4>
-                <p data-bs-toggle="modal" data-bs-target="#modalCreateCategory" class="card-description btn btn-primary ">new category</p>
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="card-title text-primary">Category</h4>
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCreateCategory">
+                + New Category
+              </button>
             </div>
-            <table class="table table-striped">
-              <thead>
-                <tr> 
-                  <th>Category ID</th>
-                  <th>Category name</th>
-                  <th>image</th>
-                  <th>Status</th>
-                  <th>Action</th>
 
-                </tr>
-              </thead>
-              {{-- <tbody class="categoryList">
-                <tr>
-                  <td>1001</td>
-                  <td>phument007</td>
-                  <td>phument@gmail.com</td>
-                  <td>
-                    <a href="#" class="btn btn-primary btn-sm">view</a>
-                    <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                  </td>
-                 
-                  
-                </tr>
-              </tbody> --}}
-              <tbody class="categoryList">
+            <!-- Responsive Table -->
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th>#ID</th>
+                    <th>Name</th>
+                    <th>Image</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody class="categoryList">
+                  <!-- JS will inject rows here -->
+                </tbody>
+              </table>
+            </div>
 
-              </tbody>
-            </table> 
           </div>
         </div>
       </div>

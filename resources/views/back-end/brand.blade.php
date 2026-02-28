@@ -9,40 +9,47 @@
       @include('back-end.messages.brand.edit')
       {{-- Modal edit start --}}
 
-      <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3>Brands</h3>
-                <p data-bs-toggle="modal" data-bs-target="#modalCreateBrand" class="card-description btn btn-primary ">new brand</p>
-            </div>
-            <table class="table table-striped">
-              <thead>
-                <tr> 
-                  <th>Brand ID</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody class="brand_list">
-              </tbody>
-            </table>
-
-            
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="show-page"></div>
-
-                <button onclick="BrandRefresh()" 
-                    class="btn btn-outline-danger rounded-0 btn-sm">
-                    refresh
-                </button>
-            </div>
-          </div>
-        </div>
-
+<div class="col-12 col-md-12 col-lg-12 grid-margin stretch-card">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="card-title text-primary">Brands</h3>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCreateBrand">
+          + New Brand
+        </button>
       </div>
+
+      <!-- Responsive Table -->
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-light text-secondary">
+            <tr>
+              <th>#ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="brand_list">
+            <!-- JS will inject rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer: pagination + refresh -->
+      <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
+        <div class="show-page"></div>
+        <button onclick="BrandRefresh()" class="btn btn-outline-danger btn-sm rounded-0">
+          🔄 Refresh
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 @endsection
 
