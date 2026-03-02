@@ -164,50 +164,63 @@
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
+                    let products = response.products;
+                    let tr = '';
 
-                    let html = '';
+                    $.each(products , function(index, value){
+                        tr +=`
+                        <tr>
+                            <td>P${value.id}</td>
 
-                    response.products.forEach(product => {
+                            <!-- Product Image -->
+                            <td>
+                                `;
 
-                        // Stock Status
-                        let stockStatus = product.qty > 0 
-                            ? '<span class="badge bg-success text-light p-1">In Stock</span>'
-                            : '<span class="badge bg-danger text-light p-1">Out of Stock</span>';
+                                if (value.images.length > 0) {
+                                    tr +=
+                                        `<img  src='{{ asset('uploads/product/${value.images[0].image}') }}'/>`;
+                                    }    
 
-                        // Product Status
-                        let productStatus = product.status == 1 
-                            ? '<span class="badge bg-success text-light p-1">Active</span>'
-                            : '<span class="badge bg-danger text-light p-1">Inactive</span>';
+                            tr +=`
+                                 
+                            </td>
 
-                        // Product Image
-                        let image = product.Images.length > 0 
-                            ? product.Images[0].image 
-                            : 'sample.jpg'; // fallback
+                            <!-- Product Info -->
+                            <td>${value.name}</td>
+                            <td>${value.category.name}</td>
+                            <td>${value.brand.name}</td>
+                            <td>${value.price}</td>
+                            <td>${value.qty}</td>
 
-                        html += `<tr>
-                                    <td>P${product.id.toString().padStart(3,'0')}</td>
-                                    <td>
-                                        <img src="uploads/product/${image}" alt="${product.name}" class="img-thumbnail" style="width: 60px; height: 60px;">
-                                    </td>
-                                    <td>${product.name}</td>
-                                    <td>${product.Category ? product.Category.name : ''}</td>
-                                    <td>${product.Brand ? product.Brand.name : ''}</td>
-                                    <td>$${product.price}</td>
-                                    <td>${product.qty}</td>
-                                    <td>${stockStatus}</td>
-                                    <td>${productStatus}</td>
-                                    <td class="text-nowrap">
-                                        <button type="button" class="btn btn-info btn-sm me-1" data-bs-toggle="modal" data-bs-target="#modalUpdateProduct">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>`;
+                            <!-- Stock Status Badge -->
+                            <td>
+                                
+                                <span class="badge bg-success text-light p-1  ${value.qty == 1 ? 'bg-success' : 'bg-danger'}">
+                                    ${value.qty == 1 ? 'In Stock' : 'Out Stock'}
+                                </span>
+                            </td>
+
+                            <!-- Product Status Badge -->
+                            <td>
+                                <span class="badge bg-success text-light p-1 ${value.status == 1 ? 'bg-success' : 'bg-danger'}">
+                                    ${value.status == 1 ? 'Active' : 'Inactive'}
+                                </span>
+                            </td>
+
+                            <!-- Action Buttons -->
+                            <td class="text-nowrap">
+                                <button type="button" onClick="ProductEdit(${value.id})" class="btn btn-info btn-sm me-1" data-bs-toggle="modal" data-bs-target="#modalUpdateProduct">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm" onClick="ProductDelete(${value.id})">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                        `;
                     });
 
-                    $('.products_list').html(html);
+                    $('.products_list').html(tr);
                 }
             });
         }
@@ -266,88 +279,192 @@
             }
         }
 
-
         const ProductStore = (form) => {
-            let payload = new FormData($(form)[0]);
+            let payloads = new FormData($(form)[0]);
 
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.store') }}",
-                data: payload,
+                data: payloads,
                 dataType: "json",
-                processData: false,
                 contentType: false,
-                success: function (response) {
-                    console.log("hi", response);
-
+                processData: false,
+                success: function(response) {
                     if (response.status == 200) {
-
                         $(form).trigger("reset");
-                        $('.show-images').html('');
-                        $('#modalCreateProduct').modal('hide');
-                        $('input').removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('text-danger')
-                                .text('');
-
-                        Message(response.message, true);
+                        $('.show-images').html(" ");
+                        $("#modalCreateProduct").modal('hide');
+                        $('input').removeClass("is-invalid").siblings("p").removeClass('text-danger').text(
+                            " ")
+                        Message(response.message);
+                        ProductList();
 
                     } else {
-
                         Message(response.message, false);
 
-                        // Title
-                        if (response.errors?.title) {
-                            $('.title_add').addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('text-danger')
-                                .text(response.errors.title);
+                        if (response.errors.title) {
+                            $('.title_add').addClass("is-invalid").siblings("p").addClass('text-danger')
+                                .text(response.errors.title)
                         } else {
-                            $('.title_add').removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('text-danger')
-                                .text('');
+                            $('.title_add').removeClass("is-invalid").siblings("p").removeClass(
+                                'text-danger').text("")
                         }
 
-                        // Description
-                        if (response.errors?.desc) {
-                            $('.desc').addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('text-danger')
-                                .text(response.errors.desc);
+                        if (response.errors.price) {
+                            $('.price_add').addClass("is-invalid").siblings("p").addClass('text-danger')
+                                .text(response.errors.price)
                         } else {
-                            $('.desc').removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('text-danger')
-                                .text('');
+                            $('.price_add').removeClass("is-invalid").siblings("p").removeClass(
+                                'text-danger').text("")
+
                         }
 
-                        // Price
-                        if (response.errors?.price) {
-                            $('.price_add').addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('text-danger')
-                                .text(response.errors.price);
+                        if (response.errors.qty) {
+                            $('.qty_add').addClass("is-invalid").siblings("p").addClass('text-danger').text(
+                                response.errors.qty)
                         } else {
-                            $('.price_add').removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('text-danger')
-                                .text('');
-                        }
-
-                        // Qty
-                        if (response.errors?.qty) {
-                            $('.qty_add').addClass('is-invalid')
-                                .siblings('p')
-                                .addClass('text-danger')
-                                .text(response.errors.qty);
-                        } else {
-                            $('.qty_add').removeClass('is-invalid')
-                                .siblings('p')
-                                .removeClass('text-danger')
-                                .text('');
+                            $('.qty_add').removeClass("is-invalid").siblings("p").removeClass('text-danger')
+                                .text("")
                         }
                     }
+                }
+            });
+        }
+
+        const ProductEdit = (id) => {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('product.edit') }}",
+                data: { id: id, _token: "{{ csrf_token() }}" },
+                dataType: "json",
+                success: function(response){
+                    console.log(response);
+
+                    if(response.status == 200){
+                        let product = response.product;
+
+                        // prefill main fields
+                        $('#product_id').val(product.id);
+                        $('.title_edit').val(product.name);
+                        $('.desc_edit').val(product.desc);
+                        $('.price_edit').val(product.price);
+                        $('.qty_edit').val(product.qty);
+
+                        // fill categories
+                        let categoryHtml = '';
+                        $.each(response.categories, function(index, cat){
+                            categoryHtml += `<option value="${cat.id}" ${cat.id == product.category_id ? 'selected' : ''}>${cat.name}</option>`;
+                        });
+                        $('.category_edit').html(categoryHtml);
+
+                        // fill brands
+                        let brandHtml = '';
+                        $.each(response.brands, function(index, b){
+                            brandHtml += `<option value="${b.id}" ${b.id == product.brand_id ? 'selected' : ''}>${b.name}</option>`;
+                        });
+                        $('.brand_edit').html(brandHtml);
+
+                        let colors = response.colors; // ឬ response.data ប្រសិនបើ data មាន colors
+                        let colorIds = product.color ? product.color.split(',') : []; // split string to array
+
+                        let colorHtml = '';
+                        $.each(colors, function(index, c){
+                            if(colorIds.includes(c.id.toString())) {
+                                colorHtml += `<option value="${c.id}" selected>${c.name}</option>`;
+                            } else {
+                                colorHtml += `<option value="${c.id}">${c.name}</option>`;
+                            }
+                        });
+
+                        $('.color_edit').html(colorHtml);
+                        let images = response.images;
+                        let imageHtml = '';
+                        let baseUrl = "{{ asset('uploads/product') }}"; // base path
+
+                        $.each(images, function(index, img){
+                            imageHtml += `
+                                <div class="image-item" style="display:inline-block; margin:5px;">
+                                    <img src="${baseUrl}/${img.image}" width="100">
+                                    <button type="button" class="btn btn-danger btn-sm" onClick="cancelImage('${img.image}')">Cancel</button>
+                                </div>
+                            `;
+                        });
+
+                        // Clear old images and append new
+                        $('.show-images-edit').html(imageHtml);
+
+                        // show modal
+                        $('#modalUpdateProduct').modal('show');
+                    }
+                },
+                error: function(xhr){
+                    console.error(xhr);
+                }
+            });
+        };
+        const ProductUpdate = (form) => {
+            let payloads = new FormData($(form)[0]);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('product.update') }}",
+                data: payloads,
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.status == 200) {
+                        $(form).trigger("reset");
+                        $('.show-images-edit').html(" ");
+                        $("#modalUpdateProduct").modal('hide');
+                        $('input').removeClass("is-invalid").siblings("p").removeClass('text-danger').text(
+                            " ")
+                        Message(response.message);
+                        ProductList();
+                    } else {
+                        Message(response.message, false);
+
+                        if (response.errors.title) {
+                            $('.title_edit').addClass("is-invalid").siblings("p").addClass('text-danger')
+                                .text(response.errors.title)
+                        } else {
+                            $('.title_edit').removeClass("is-invalid").siblings("p").removeClass(
+                                'text-danger').text("")
+                        }
+
+                        if (response.errors.price) {
+                            $('.price_edit').addClass("is-invalid").siblings("p").addClass('text-danger')
+                                .text(response.errors.price)
+                        } else {
+                            $('.price_edit').removeClass("is-invalid").siblings("p").removeClass(
+                                'text-danger').text("")
+
+                        }
+
+                        if (response.errors.qty) {
+                            $('.qty_edit').addClass("is-invalid").siblings("p").addClass('text-danger')
+                                .text(response.errors.qty)
+                        } else {
+                            $('.qty_edit').removeClass("is-invalid").siblings("p").removeClass(
+                                'text-danger').text("")
+                        }
+                    }
+                }
+            });
+
+        }
+        const ProductDelete = (id) => {
+            console.log("Deleting product id:", id); // debug
+            if(!confirm("Are you sure?")) return;
+
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('product.destroy', ':id') }}".replace(':id', id),
+                data: { id: id },
+                dataType: "json",
+                success: function(response){
+                    Message(response.message);
+                    ProductList();
                 }
             });
         };
