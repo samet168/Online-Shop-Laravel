@@ -138,12 +138,8 @@
 
     <!-- Toastify messages -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
     {{-- Select 2 script --}}
-
-
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
     <script>
@@ -153,7 +149,7 @@
           }
        });
 
-       const Message = (message) => {
+       const Message = (message,status = true) => {
           Toastify({
             text: `${message}`,
             duration: 2000,
@@ -164,7 +160,11 @@
             position: "right", // `left`, `center` or `right`
             stopOnFocus: true, // Prevents dismissing of toast on hover
             style: {
-              background: "linear-gradient(to right, #00b09b, #96c93d)",
+              background: `
+                ${status ? " linear-gradient(to right, #00b09b, #96c93d)" :
+                 "linear-gradient(90deg,rgba(180, 58, 58, 1) 10%, rgba(253, 107, 29, 1) 61%, rgba(252, 203, 69, 1) 100%"}
+                
+              `,
             },
             onClick: function(){} // Callback after click
           }).showToast();

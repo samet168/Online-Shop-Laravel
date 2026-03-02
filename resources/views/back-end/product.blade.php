@@ -111,6 +111,7 @@
             });
 
         });
+
         const handleClickOnButtonNewProduct = () => {
             $.ajax({
                 type: "POST",
@@ -154,6 +155,63 @@
                 }
             });
         }
+
+
+        const ProductList = () => {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('product.list') }}",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+
+                    let html = '';
+
+                    response.products.forEach(product => {
+
+                        // Stock Status
+                        let stockStatus = product.qty > 0 
+                            ? '<span class="badge bg-success text-light p-1">In Stock</span>'
+                            : '<span class="badge bg-danger text-light p-1">Out of Stock</span>';
+
+                        // Product Status
+                        let productStatus = product.status == 1 
+                            ? '<span class="badge bg-success text-light p-1">Active</span>'
+                            : '<span class="badge bg-danger text-light p-1">Inactive</span>';
+
+                        // Product Image
+                        let image = product.Images.length > 0 
+                            ? product.Images[0].image 
+                            : 'sample.jpg'; // fallback
+
+                        html += `<tr>
+                                    <td>P${product.id.toString().padStart(3,'0')}</td>
+                                    <td>
+                                        <img src="uploads/product/${image}" alt="${product.name}" class="img-thumbnail" style="width: 60px; height: 60px;">
+                                    </td>
+                                    <td>${product.name}</td>
+                                    <td>${product.Category ? product.Category.name : ''}</td>
+                                    <td>${product.Brand ? product.Brand.name : ''}</td>
+                                    <td>$${product.price}</td>
+                                    <td>${product.qty}</td>
+                                    <td>${stockStatus}</td>
+                                    <td>${productStatus}</td>
+                                    <td class="text-nowrap">
+                                        <button type="button" class="btn btn-info btn-sm me-1" data-bs-toggle="modal" data-bs-target="#modalUpdateProduct">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>`;
+                    });
+
+                    $('.products_list').html(html);
+                }
+            });
+        }
+        ProductList();
 
         const ProductUpload = (form) => {
             let payload = new FormData($(form)[0]);
@@ -209,19 +267,89 @@
         }
 
 
-const ProductStore = (form) => {
-    let payload = new FormData($(form)[0]);
-    $.ajax({
-        type: "POST",
-        url: "{{ route('product.store') }}",
-        data: payload,
-        dataType: "json",
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            console.log("hi", response);
-        }
-    });
-}
+        const ProductStore = (form) => {
+            let payload = new FormData($(form)[0]);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('product.store') }}",
+                data: payload,
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("hi", response);
+
+                    if (response.status == 200) {
+
+                        $(form).trigger("reset");
+                        $('.show-images').html('');
+                        $('#modalCreateProduct').modal('hide');
+                        $('input').removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('text-danger')
+                                .text('');
+
+                        Message(response.message, true);
+
+                    } else {
+
+                        Message(response.message, false);
+
+                        // Title
+                        if (response.errors?.title) {
+                            $('.title_add').addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('text-danger')
+                                .text(response.errors.title);
+                        } else {
+                            $('.title_add').removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('text-danger')
+                                .text('');
+                        }
+
+                        // Description
+                        if (response.errors?.desc) {
+                            $('.desc').addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('text-danger')
+                                .text(response.errors.desc);
+                        } else {
+                            $('.desc').removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('text-danger')
+                                .text('');
+                        }
+
+                        // Price
+                        if (response.errors?.price) {
+                            $('.price_add').addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('text-danger')
+                                .text(response.errors.price);
+                        } else {
+                            $('.price_add').removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('text-danger')
+                                .text('');
+                        }
+
+                        // Qty
+                        if (response.errors?.qty) {
+                            $('.qty_add').addClass('is-invalid')
+                                .siblings('p')
+                                .addClass('text-danger')
+                                .text(response.errors.qty);
+                        } else {
+                            $('.qty_add').removeClass('is-invalid')
+                                .siblings('p')
+                                .removeClass('text-danger')
+                                .text('');
+                        }
+                    }
+                }
+            });
+        };
     </script>
 @endsection

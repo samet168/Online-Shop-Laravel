@@ -20,6 +20,7 @@
                         <div class="form-group"> 
                             <label for="name">Description</label> 
                             <textarea name="desc" id="desc" class="desc form-control" rows="10"></textarea> 
+                            
                         </div> 
  
                         <div class="form-group"> 
@@ -27,7 +28,7 @@
                             <input type="text" class="price_add form-control" name="price" > 
                             <p></p>
                         </div> 
- 
+
                         <div class="form-group"> 
                             <label for="qty">Product Quantity</label> 
                             <input type="text" class="qty_add form-control"  name="qty"> 

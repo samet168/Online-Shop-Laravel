@@ -73,12 +73,12 @@ Route::group(['prefix' => 'admin'], function () {
 
         //Product Routers
         Route::get("/product",[ProductController::class,'index'])->name("product.index");
-        Route::post("/product/list",[ProductController::class,'list'])->name("product.list");
+        Route::get("/product/list",[ProductController::class,'list'])->name("product.list");
         Route::post("/product/store",[ProductController::class,'store'])->name("product.store");
         Route::post('/product/data',[ProductController::class,'data'])->name('product.data');
         Route::post("/product/edit",[ProductController::class,'edit'])->name("product.edit");
         Route::post("/product/update",[ProductController::class,'update'])->name("product.update");
-        Route::post("/product/destroy",[ProductController::class,'destroy'])->name("product.destroy");
+        Route::delete("/product/destroy",[ProductController::class,'destroy'])->name("product.destroy");
 
         //product imag
         Route::post('/product/upload',[ImageController::class,'uploads'])->name('product.uploads');
