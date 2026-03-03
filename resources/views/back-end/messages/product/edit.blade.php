@@ -38,10 +38,10 @@
                         <div class="form-group"> 
                             <label for="">Product Image</label> 
                             <input type="file" id="image" class="image form-control" multiple name="image[]" required> 
-                            <button type="button" onclick="ProductUpload('.formUpdateProduct')"  class=" btn btn-primary upload_images">Uploads</button> 
+                            <button type="button" onclick="ProductUpload('.formUpdateProduct')"   class=" btn btn-primary upload_images">Uploads</button> 
                         </div>
                         
-                        <div class="show-images-edit row">
+                        <div class="show-images show-images-edit row">
                           
                         </div>
      
@@ -95,7 +95,7 @@
         </div> 
         <div class="modal-footer"> 
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
-          <button type="button" onclick="ProductUpdate('.formUpdateProduct')" class="btn btn-primary">Upadate</button> 
+          <button type="button" onclick="ProductUpdate('.formUpdateProduct')"  class="btn btn-primary">Upadate</button> 
         </div> 
       </div> 
     </div> 

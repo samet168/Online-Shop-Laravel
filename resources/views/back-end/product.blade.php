@@ -401,7 +401,7 @@
                             imageHtml += `
                                 <div class="image-item" style="display:inline-block; margin:5px;">
                                     <img src="${baseUrl}/${img.image}" width="100">
-                                    <button type="button" class="btn btn-danger btn-sm" onClick="cancelImage('${img.image}')">Cancel</button>
+                                    <button type="button" class="btn btn-danger btn-sm" onClick="ProductCancelImage(this, '${img.image}')">Cancel</button>
                                 </div>
                             `;
                         });

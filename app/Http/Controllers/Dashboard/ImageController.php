@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -66,17 +67,24 @@ public function uploads(Request $request)
 // }
 public function cancel(Request $request)
 {
-    if($request->image){
-        $tempDir = public_path('uploads/temp/'.$request->image);
-        if(File::exists($tempDir)){
-            File::delete($tempDir);
+        $temp_path = public_path("uploads/temp/".$request->image);
+        $product_path = public_path("uploads/product/".$request->image);
+
+        if(File::exists($temp_path) || File::exists($product_path)){
+            
+            if(File::exists($temp_path)){
+                File::delete($temp_path);
+            }elseif(File::exists($product_path)){
+                File::delete($product_path); 
+                        ProductImage::where('image',$request->image)->delete();
+            }
+
+            
             return response()->json([
-                'status' => 200,
-                'message' => 'Image deleted successfully'
+               'status' => 200,
+               'message' => 'Image Cancelled Successfully',
             ]);
         }
-    }
-
 
 }
 
