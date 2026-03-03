@@ -37,6 +37,7 @@
     @yield('styles')
 
   </head>
+
   <body>
 
     <div class="container-scroller">

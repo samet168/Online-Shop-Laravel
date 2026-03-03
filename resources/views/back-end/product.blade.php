@@ -157,11 +157,14 @@
         }
 
 
-        const ProductList = (search = "") => {
+        const ProductList = (page = 1, search = "") => {
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.list') }}",
-                data: { search: search },
+                data: { 
+                    search: search,
+                    page: page
+                 },
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
@@ -222,20 +225,67 @@
                     });
 
                     $('.products_list').html(tr);
+                    // ================= Pagination =================
+                    //pagination
+                    let page = ``;
+                    let totalPage = response.page.totalPage;
+                    let currentPage = response.page.currentPage;
+                    console.log(currentPage);
+                    page = `
+                    <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                    <li onclick="PreviousPage(${currentPage})" class="page-item ${(currentPage == 1) ? 'd-none' : 'd-block' }">
+                    <a class="page-link" href="javascript:void()" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>`;
+
+                    for(let i=1;i<=totalPage;i++){
+                    page += `
+                        <li onclick="Page(${i})" class="page-item ${(i == currentPage) ? 'active' : '' }">
+                            <a class="page-link" href="javascript:void()">${i}</a>
+                        </li>`;
+                    }
+
+                    page +=`<li onclick="NextPage(${currentPage})" class="page-item ${( currentPage == totalPage ) ? 'd-none' : 'd-block'}">
+                    <a class="page-link" href="javascript:void()" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    </li>
+                    </ul>
+                    </nav>
+                    `;
+
+                    if(totalPage > 1 ){
+                    $(".show-page").html(page);
+                    }
                 }
             });
         }
         ProductList();
+        const Page = (page) => {
+            ProductList(page);
+        }
 
-        //search event 
-        $(document).on("click", '.searchBtn', function() {
 
-            let searchValue = $("#search").val(); // <-- កែ id អោយត្រូវ
-            ProductList(searchValue);
+        //Next Page
+        const NextPage  = (page) => {
+            ProductList(page + 1);
+        }
 
-            $(this).blur(); // remove focus
-            $("#modalSearch").modal('hide');
-        });
+
+        //Previous Page
+        const PreviousPage = (page) => {
+            ProductList(page - 1);
+        }
+
+$(document).on("click", '.searchBtn', function() {
+    let searchValue = $("#search").val();
+    ProductList(1, searchValue); // <-- page = 1, search = value
+
+    $(this).blur(); // remove focus
+    $("#modalSearch").modal('hide');
+});
 
         const ProductRefresh = () => {
         ProductList();
@@ -348,6 +398,7 @@
         }
 
         const ProductEdit = (id) => {
+            $(('.show-images-edit')).html('');
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.edit') }}",

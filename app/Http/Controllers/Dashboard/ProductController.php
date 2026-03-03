@@ -115,33 +115,53 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function list(Request $request)
-    {
-    if($request->search){
+public function list(Request $request)
+{
+    $limit = 5;
+    $page  = $request->page;
+    $offset = ($page - 1) * $limit;
 
-    $products = Products::where('name', 'like', '%' . $request->search . '%')
-        ->orWhereHas('Category', function($field) use ($request) {
-            $field->where('name','like','%'.$request->search.'%');
-        })
-        ->orWhereHas('Brand', function($field) use ($request) {
-            $field->where('name','like','%'.$request->search.'%');
-        })
-        ->with('Category','Brand','Images')
-        ->orderBy("id","DESC")
-        ->get();
+    if ($request->search) {
 
-    }else{
+        $query = Products::where('name', 'like', '%' . $request->search . '%')
+            ->orWhereHas('Category', function($field) use ($request) {
+                $field->where('name','like','%'.$request->search.'%');
+            })
+            ->orWhereHas('Brand', function($field) use ($request) {
+                $field->where('name','like','%'.$request->search.'%');
+            });
+
+        $totalRecord = $query->count();
+
+        $products = $query->with('Category','Brand','Images')
+            ->orderBy("id","DESC")
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
+
+    } else {
+
+        $totalRecord = Products::count();
 
         $products = Products::with('Category','Brand','Images')
             ->orderBy("id","DESC")
+            ->limit($limit)
+            ->offset($offset)
             ->get();
     }
-        
-        return response()->json([
-            'status' => 200,
-            'products' => $products
-        ]);
-    }
+
+    $totalPage = ceil($totalRecord / $limit);
+
+    return response()->json([
+        'status' => 200,
+        'page' => [
+            'totalPage' => $totalPage,
+            'currentPage' => $page,
+            'totalRecords' => $totalRecord
+        ],
+        'products' => $products
+    ]);
+}
 
     /**
      * Show the form for editing the specified resource.
