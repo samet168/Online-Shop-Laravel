@@ -157,10 +157,11 @@
         }
 
 
-        const ProductList = () => {
+        const ProductList = (search = "") => {
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.list') }}",
+                data: { search: search },
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
@@ -225,6 +226,21 @@
             });
         }
         ProductList();
+
+        //search event 
+        $(document).on("click", '.searchBtn', function() {
+
+            let searchValue = $("#search").val(); // <-- កែ id អោយត្រូវ
+            ProductList(searchValue);
+
+            $(this).blur(); // remove focus
+            $("#modalSearch").modal('hide');
+        });
+
+        const ProductRefresh = () => {
+        ProductList();
+        $('.search').val('');
+        }
 
         const ProductUpload = (form) => {
             let payload = new FormData($(form)[0]);

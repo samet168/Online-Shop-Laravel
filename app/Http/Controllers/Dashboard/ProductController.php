@@ -115,12 +115,28 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function list()
+    public function list(Request $request)
     {
-        $products = Products::orderBy("id","DESC")
-                    ->with('Category','Brand','Images') // use proper relation names
-                    ->get();
+    if($request->search){
 
+    $products = Products::where('name', 'like', '%' . $request->search . '%')
+        ->orWhereHas('Category', function($field) use ($request) {
+            $field->where('name','like','%'.$request->search.'%');
+        })
+        ->orWhereHas('Brand', function($field) use ($request) {
+            $field->where('name','like','%'.$request->search.'%');
+        })
+        ->with('Category','Brand','Images')
+        ->orderBy("id","DESC")
+        ->get();
+
+    }else{
+
+        $products = Products::with('Category','Brand','Images')
+            ->orderBy("id","DESC")
+            ->get();
+    }
+        
         return response()->json([
             'status' => 200,
             'products' => $products
