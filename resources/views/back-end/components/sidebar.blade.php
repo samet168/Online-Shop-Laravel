@@ -53,6 +53,12 @@
           <span class="menu-title">Product</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('profile.index') }}">
+          <i class="menu-icon typcn typcn-document-text"></i>
+          <span class="menu-title">Profile</span>
+        </a>
+      </li>
 
 
 

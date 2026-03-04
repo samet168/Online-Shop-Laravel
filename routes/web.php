@@ -6,7 +6,8 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ColorController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ImageController;
-use App\Http\Controllers\Dashboard\ProductController; 
+use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\DashboardMiddleware;
@@ -79,6 +80,12 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post("/product/edit",[ProductController::class,'edit'])->name("product.edit");
         Route::post("/product/update",[ProductController::class,'update'])->name("product.update");
         Route::delete("/product/destroy",[ProductController::class,'destroy'])->name("product.destroy");
+
+        //Profile Routers
+        Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
+        Route::post('/profile/change/password',[ProfileController::class,'changePassword'])->name('profile.change.password');
+        Route::post('/profile/update',[ProfileController::class,'updateProfile'])->name('profile.update');
+        Route::post('/profile/change/image',[ProfileController::class,'changeProfileImage'])->name('profile.change.image');
 
         //product imag
         Route::post('/product/upload',[ImageController::class,'uploads'])->name('product.uploads');
