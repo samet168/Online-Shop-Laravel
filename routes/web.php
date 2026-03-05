@@ -18,29 +18,21 @@ use Illuminate\Support\Facades\Route;
 
 //Login Router
 
-Route::group(['prefix' => 'admin'], function () {
-    Route::get('/',[AuthController::class,'login'])->name('auth.index');
-    Route::post('/login',[AuthController::class,'authenticate'])->name('auth.authenticate');
-
-    Route::middleware(AuthMiddleware::class)->group(function () {
-
-
-    
-        Route::get('/logout',[AuthController::class,'logout'])->name('auth.logout');
-
-        Route::middleware(DashboardMiddleware::class)->group(function () {
-            Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.index');
-                    //user Router
-            Route::get('/user',[UserController::class,'index'])->name('user.index');
-            Route::get('/user/list',[UserController::class,'list'])->name('user.list');
-            Route::Post('/user/store',[UserController::class,'store'])->name('user.store');
-            Route::Post('/user/edit/{id}',[UserController::class,'edit'])->name('user.edit');
-            Route::Post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
-            Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
-        });
-        
-
-
+Route::prefix('admin')->group(function () {
+    Route::middleware('guest.admin')->group(function () {
+        Route::get('/',[AuthController::class,'login'])->name('auth.index');
+        Route::post('/login',[AuthController::class,'authenticate'])->name('auth.authenticate');
+    });
+    Route::middleware('auth.admin')->group(function () {
+        Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard.index');
+                //user Router
+        Route::get('/user',[UserController::class,'index'])->name('user.index');
+        Route::get('/user/list',[UserController::class,'list'])->name('user.list');
+        Route::Post('/user/store',[UserController::class,'store'])->name('user.store');
+        Route::Post('/user/edit/{id}',[UserController::class,'edit'])->name('user.edit');
+        Route::Post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
+        Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+            
 
         //category Router
         Route::get('/category',[CategoryController::class,'index'])->name('category.index');
@@ -90,8 +82,12 @@ Route::group(['prefix' => 'admin'], function () {
         //product imag
         Route::post('/product/upload',[ImageController::class,'uploads'])->name('product.uploads');
         Route::post('/product/cancel',[ImageController::class,'cancel'])->name('product.cancel');
+
+        //logout
+        Route::get('/logout',[AuthController::class,'logout'])->name('auth.logout');
     });
 
-
 });
+    
+
 

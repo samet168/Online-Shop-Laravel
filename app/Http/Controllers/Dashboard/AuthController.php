@@ -12,12 +12,12 @@ class AuthController extends Controller
 {
     //
     public function login(){
-        if(Auth::check()){
-            if(Auth::user()->role == 1){
-                return redirect()->route('dashboard.index');
-            }
-            return redirect()->route('category.index');
-        }
+        // if(Auth::check()){
+        //     if(Auth::user()->role == 1){
+        //         return redirect()->route('dashboard.index');
+        //     }
+        //     return redirect()->route('category.index');
+        // }
         return view('back-end.login');
     }
 public function authenticate (Request $request){

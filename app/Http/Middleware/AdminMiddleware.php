@@ -3,11 +3,12 @@
 namespace App\Http\Middleware;
 
 use Closure;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class DashboardMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,10 +17,10 @@ class DashboardMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->role == 1){
+        if(Auth::check() && Auth::user()->role == 1){
             return $next($request);
         }else{
-            return redirect()->back()->with("error","You don't have permission to access this page");
+            return redirect()->route('auth.index');
         }
         
     }
