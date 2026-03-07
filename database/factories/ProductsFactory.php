@@ -13,37 +13,25 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductsFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array  
+    public function definition(): array
     {   
-        
         $colorIds = Color::pluck('id')->toArray();   
-        
-       
+
         $numberOfColorsToSelect = rand(1, min(4, count($colorIds)));  
-        
+
         // Select random color IDs and convert to array  
         $colors = collect($colorIds)->random($numberOfColorsToSelect)->all();
         $colorString = implode(',', $colors);  
 
-        //iphone => 1,3,4,6
-    
         // Fetch category IDs from the database  
         $categoryIds = Category::pluck('id')->toArray();
-        //1 2 3   
         $categoryId = collect($categoryIds)->random();
-        //[1,2,3]  
 
-    
         // Fetch brand IDs from the database  
         $brandIds = Brand::pluck('id')->toArray();   
         $brandId = collect($brandIds)->random(); 
     
-        // Get current date in d-m-y format  
+        // Get current date  
         $currentDate = Carbon::now()->format('d-m-y');  
     
         return [  
@@ -58,6 +46,5 @@ class ProductsFactory extends Factory
             "created_at" => $currentDate, 
             "updated_at" => $currentDate, 
         ];
-          
     } 
 }
