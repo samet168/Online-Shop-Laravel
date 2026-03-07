@@ -14,6 +14,8 @@ class SingleProductController extends Controller
         // eager load relation 'images' (lowercase)
         $product = Products::with(['images', 'category', 'brand'])->find($id);
         $related_products = Products::where('brand_id', $product->brand_id)
+                                    // ->where('price','>=', $product->price - 100)
+                                    // ->where('price','<=', $product->price + 100)
                                     ->where('id', '!=', $product->id)
                                     ->where('status', 1)
                                     ->limit(4)
@@ -32,23 +34,16 @@ class SingleProductController extends Controller
         foreach($colors as $color){
             $colorStore[] = $color;
         }
-
-        return view('front-end.single-product', [
-            'product' => $product,
-            'images' => $product->images,
-            'colors' => $colors,
-            'category' => $product->category,
-            'brand' => $product->brand,
-            'related_products' => $related_products,
-        ]);
-        // return [
-        //     'product' => $product,
-        //     'images' => $product->images,
-        //     'colors' => $colors,
-        //     'category' => $product->category,
-        //     'brand' => $product->brand,
-        //     'related_product' =>$related_products
-        // ];
+// return $product;
+return view('front-end.single-product', [
+    'product' => $product,
+    'images' => $product->images,
+    'colors' => $colors,
+    'category' => $product->category,
+    'brand' => $product->brand,
+    'related_products' => $related_products // ✅ plural
+]);
+        // return $related_products;
     }
     
 }

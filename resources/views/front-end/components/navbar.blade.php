@@ -127,7 +127,7 @@
 
 					<!-- Home -->
 					<li class="dropdown ">
-						<a href="index.html">Home</a>
+						<a href="{{ route('home.index') }}">Home</a>
 					</li><!-- / Home -->
 
 

@@ -48,8 +48,11 @@
 @endsection
 
 @section('contents')
-
+<div id="global-loading" style="display:none;">
+    <div class="spinner"></div>
+</div
 <section class="product-category section">
+>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -61,17 +64,18 @@
       <!-- Left Column -->
       <div class="col-md-6">
         <div class="category-box card-style">
-          <a href="#!">
+          <a href="{{ route('product.category',$categories[0]->id) }}">
             <img src="{{ asset('uploads/category/' . $categories[0]->image) }}" alt="" />
             <div class="content">
               <h3>{{ $categories[0]->name }}</h3>
               <p>Shop New Season Clothing</p>
             </div>
           </a>
+          
         </div>
 
         <div class="category-box card-style mt-4">
-          <a href="#!">
+          <a href="{{ route('product.category',$categories[1]->id) }}">
             <img src="{{ asset('uploads/category/' . $categories[1]->image) }}" alt="" />
             <div class="content">
               <h3>{{ $categories[1]->name }}</h3>
@@ -84,10 +88,21 @@
       <!-- Right Column -->
       <div class="col-md-6">
         <div class="category-box card-style category-box-2">
-          <a href="#!">
+          <a href="{{ route('product.category',$categories[2]->id) }}">
             <img src="{{ asset('uploads/category/' . $categories[2]->image) }}" alt="" />
             <div class="content">
               <h3>{{ $categories[2]->name }}</h3>
+              <p>Special Design Comes First</p>
+            </div>
+          </a>
+        </div>
+      </div>
+            <div class="col-md-6">
+        <div class="category-box card-style category-box-2">
+          <a href="{{ route('product.category',$categories[3]->id) }}">
+            <img src="{{ asset('uploads/category/' . $categories[3]->image) }}" alt="" />
+            <div class="content">
+              <h3>{{ $categories[3]->name }}</h3>
               <p>Special Design Comes First</p>
             </div>
           </a>
@@ -160,6 +175,10 @@
             <div class="modal-body view-product"></div>
           </div>
         </div>
+             <!-- Loading overlay -->
+                <div id="loading-overlay" style="display:none;">
+                <div class="spinner"></div>
+                </div>
       </div>
 
     </div>
@@ -173,7 +192,27 @@
 
 @section('script')
 <script>
+    $(document).ready(function() {
+    // បង្ហាញ loading overlay ពេល page load
+    $('#global-loading').show();
+
+    // លាក់ loading overlay បន្ទាប់ពីទំព័រ load សម្រេច
+    $(window).on('load', function() {
+        $('#global-loading').fadeOut();
+    });
+
+    // Optional: ចង់ប្រើសម្រាប់ AJAX ទាំងអស់
+    $(document).ajaxStart(function() {
+        $('#global-loading').show();
+    });
+
+    $(document).ajaxStop(function() {
+        $('#global-loading').fadeOut();
+    });
+});
+    
     const viewProduct = (id)=>{
+        $('#loading-overlay').show();
         $.ajax({
             type: "GET",
             url: "{{ route('product.view') }}",
@@ -222,33 +261,18 @@
 
                     $('.view-product').html(productHtml);
                 }
-            }
+
+        
+            },
+            complete: function() {
+            // លាក់ loading នៅពេល AJAX បញ្ចប់
+            $('#loading-overlay').hide();
+        }
         });
     }
-// const viewProductDetails = (id) => {
-//     $.ajax({
-//         type: "GET",
-//         url: `/product/single/${id}`,  // <-- ប្រើ id ពី JS ដោយផ្ទាល់
-//         dataType: "json",
-//         success: function(response) {
-//             // ធ្វើអ្វីដែលចង់បានជាមួយ response
-//         }
-//     });
-// }
 
- const viewProduct = (id) => {
-    $.ajax({
-        type: "GET",
-        url: "/product/single/" + id, // or use a named route if preferred
-        dataType: "html",
-        success: function(response) {
-            $(".modal-body.view-product").html(response);
-        },
-        error: function() {
-            $(".modal-body.view-product").html("<p>Unable to load product details.</p>");
-        }
-    });
-}
+
+
 
 </script>
 @endsection

@@ -1,6 +1,8 @@
 @extends('front-end.components.master')
 @section('contents')
-
+                <div id="global-loading" style="display:none;">
+    <div class="spinner"></div>
+</div>
 <section class="single-product">
 	<div class="container">
 		<div class="row">
@@ -18,6 +20,7 @@
 				</ol>
 			</div>
 		</div>
+	
 
 		<div class="row mt-20">
 			<div class="col-md-5">
@@ -60,8 +63,8 @@
 					<p class="product-price">${{ $product->price }}</p>
 					
 					<p class="product-description mt-20">
-                        {{-- {{ Str::limit($product->desc, 400) }} --}}
-						{{ $product->desc }}
+                        {{ Str::limit($product->desc, 400) }}
+						{{-- {{ $product->desc }} --}}
                     </p>
 				
 					<div class="color-swatches">
@@ -196,55 +199,61 @@
 				<h2>Related Products</h2>
 			</div>
 		</div>
-<div class="row">
-    @if ($related_products->isNotEmpty())
-        @foreach ($related_products as $related)
-            @php
-                $img = $related->images->first();
-                $imageUrl = $img
-                    ? asset('uploads/product/' . $img->image)
-                    : asset('front-end/assets/images/shop/products/product-1.jpg');
-            @endphp
+		<div class="row">
 
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="{{ $imageUrl }}" alt="{{ $related->name }}" />
-                        <div class="preview-meta">
-                            <ul>
-                                <li onclick="viewProduct({{ $related->id }})">
-                                    <span data-toggle="modal" data-target="#product-modal">
-                                        <i class="tf-ion-ios-search-strong"></i>
-                                    </span>
-                                </li>
-                                <li><a href="#"><i class="tf-ion-ios-heart"></i></a></li>
-                                <li><a href="#"><i class="tf-ion-android-cart"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="{{ route('product.single', ['id' => $related->id]) }}">{{ $related->name }}</a></h4>
-                        <p class="price">${{ $related->price }}</p>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    @endif
-</div>
+			@if ($related_products->isNotEmpty())
+				@foreach ($related_products as $related)
+					@php
+						$img = $related->images->first();
+						$imageUrl = $img
+							? asset('uploads/product/' . $img->image)
+							: asset('front-end/assets/images/shop/products/product-1.jpg');
+					@endphp
+
+					<div class="col-md-3">
+						<div class="product-item">
+							<div class="product-thumb">
+								<img class="img-responsive" src="{{ $imageUrl }}" alt="{{ $related->name }}" />
+								<div class="preview-meta">
+									<ul>
+										<li onclick="viewProduct({{ $related->id }})">
+											<span data-toggle="modal" data-target="#product-modal">
+												<i class="tf-ion-ios-search-strong"></i>
+											</span>
+										</li>
+										<li><a href="#"><i class="tf-ion-ios-heart"></i></a></li>
+										<li><a href="#"><i class="tf-ion-android-cart"></i></a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="product-content">
+								<h4><a href="{{ route('product.single', ['id' => $related->id]) }}">{{ $related->name }}</a></h4>
+								<p class="price">${{ $related->price }}</p>
+							</div>
+						</div>
+					</div>
+				@endforeach
+			@endif
+		</div>
 
 <!-- Modal start -->
 <div class="modal product-modal fade" id="product-modal">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <i class="tf-ion-close"></i>
     </button>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body view-product">
-                <!-- AJAX content will be loaded here -->
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog " role="document">
+		<div class="modal-content">
+			<div class="modal-body view-product">
+
+			</div>
+		</div>
+	</div>
+	                <!-- Loading overlay -->
+                <div id="loading-overlay" style="display:none;">
+                <div class="spinner"></div>
+                </div>
 </div>
+
 <!-- Modal end -->
 	</div>
 </section>
@@ -284,50 +293,82 @@
 
 @section('script')
 <script>
-	    const viewProduct = (id) => {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('product.view') }}",
-                data: {
-                    "id": id
-                },
-                dataType: "json",
-                success: function(response) {
-                    if (response.status == 200) {
 
-                        let product = response.product;
-                       
-                        let productHTML = `
-               <div class="row">
-                                    <div class="col-md-8 col-sm-6 col-xs-12">
-                                        <div class="modal-image">`;
-                        if (product.images.length >  0) {
-                            productHTML += `<img class="img-responsive" src="{{ asset('uploads/product/${product.images[0].image}') }}" />`;
-                        }
+	$(document).ready(function() {
+    // បង្ហាញ loading overlay ពេល page load
+    $('#global-loading').show();
 
-                        productHTML += `
-                                          </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                        <div class="product-short-details">
-                                            <h2 class="product-title">${product.name}</h2>
-                                            <p class="product-price">$${product.price}</p>
-                                            <p class="product-short-description">
-                                                ${(product.desc.substring(0, 200) + '...')}
-                                            </p>
-                                            <a href="cart.html" class="btn btn-main">Add To Cart</a>
-                                            <a href="/product/single/${product.id}" class="btn btn-transparent">View Product
-                                                Details</a>
-                                        </div>
-                                    </div>
-                                </div>
-             `;
+    // លាក់ loading overlay បន្ទាប់ពីទំព័រ load សម្រេច
+    $(window).on('load', function() {
+        $('#global-loading').fadeOut();
+    });
 
-                        $('.view-product').html(productHTML);
+    // Optional: ចង់ប្រើសម្រាប់ AJAX ទាំងអស់
+    $(document).ajaxStart(function() {
+        $('#global-loading').show();
+    });
 
+    $(document).ajaxStop(function() {
+        $('#global-loading').fadeOut();
+    });
+});
+
+	    const viewProduct = (id)=>{
+			$('#loading-overlay').show();
+        $.ajax({
+            type: "GET",
+            url: "{{ route('product.view') }}",
+            data: {id:id},
+            dataType: "json",
+            success: function (response) {
+
+                if(response.status == 200){
+
+                    let product = response.product;
+                    let productHtml = '';
+
+                    productHtml += `
+                    <div class="row">
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <div class="modal-image">`;
+
+                    if(product.images.length > 0){
+                        productHtml += `
+                            <img class="img-responsive"
+                            src="/uploads/product/${product.images[0].image}"
+                            alt="product-img" />
+                        `;
                     }
+
+                    productHtml += `
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="product-short-details">
+                                <h2 class="product-title">${product.name}</h2>
+                                <p class="product-price">$${product.price}</p>
+                                <p class="product-short-description">
+                                    ${product.desc ?? ''}
+                                </p>
+
+                                <a href="#" class="btn btn-main">Add To Cart</a>
+                                <a href="/product/single/${product.id}" class="btn btn-transparent">
+                                    View Product Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                    $('.view-product').html(productHtml);
                 }
-            });
-        } 
+            },
+			        complete: function() {
+            // លាក់ loading នៅពេល AJAX បញ្ចប់
+            $('#loading-overlay').hide();
+        }
+        });
+    }
 </script>
 @endsection

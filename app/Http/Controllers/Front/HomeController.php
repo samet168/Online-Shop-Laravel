@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function homePage(){
 
         // Get latest 3 categories
-        $categories = Category::limit(3)->get();
+        $categories = Category::limit(4)->get();
 
         $products    = Products::orderBy('id','DESC')->where('status',1)->with('Images')->limit(9)->get();
 
