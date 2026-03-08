@@ -52,7 +52,7 @@
     <div class="spinner"></div>
 </div
 <section class="product-category section">
->
+
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -212,7 +212,7 @@
 });
     
     const viewProduct = (id)=>{
-        $('#loading-overlay').show();
+        
         $.ajax({
             type: "GET",
             url: "{{ route('product.view') }}",
@@ -264,10 +264,7 @@
 
         
             },
-            complete: function() {
-            // លាក់ loading នៅពេល AJAX បញ្ចប់
-            $('#loading-overlay').hide();
-        }
+
         });
     }
 

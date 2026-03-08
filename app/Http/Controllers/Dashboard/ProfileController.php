@@ -131,38 +131,34 @@ class ProfileController extends Controller
         }
     }
 
-    // Update profile
-    public function updateProfile(Request $request){
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email'=> 'required|email|unique:users,email,'.Auth::id(),
-            'phone'=> 'required|string|max:20|unique:users,phone,'.Auth::id(),
-        ]);
+    // Update profile;
 
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+public function updateProfile(Request $request)
+{
+    $user = Auth::user();
 
-        $user = User::find(Auth::id());
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
+    $user->name  = $request->name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
 
-        // Check if image uploaded via AJAX
-        if($request->image_name){
-            $ImageName = $request->image_name;
-            $Image_path = public_path('uploads/temp/'.$ImageName);
-            $user_path  = public_path('uploads/user/'.$ImageName);
+    if($request->image_name){ // check if hidden input has value
+        $imageName = $request->image_name;
+        $tempPath  = public_path('uploads/temp/'.$imageName);
+        $userPath  = public_path('uploads/user/'.$imageName);
 
-            if(File::exists($Image_path)){
-                File::copy($Image_path, $user_path);
-                File::delete($Image_path);
-                $user->image = $ImageName;
+        if(File::exists($tempPath)){
+            // delete old image if exists
+            if($user->image && File::exists(public_path('uploads/user/'.$user->image))){
+                File::delete(public_path('uploads/user/'.$user->image));
             }
+
+            File::move($tempPath, $userPath); // move temp → user
+            $user->image = $imageName;        // save filename to database
         }
-
-        $user->save();
-
-        return redirect()->back()->with('success','Profile updated successfully.');
     }
+
+    $user->save(); // save to database
+
+    return redirect()->back()->with('success','Profile updated successfully.');
+}
 }

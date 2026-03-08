@@ -1,76 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 @include('front-end.components.header')
-<body id="body">
-<section class="signin-page account">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <div class="block text-center">
-          <a class="logo">
-            <img src="images/logo.png" alt="">
-          </a>
-          <h2 class="text-center">Create Your Account</h2>
-          <form class="text-left clearfix" action="{{ route('customer.register.process') }}" method="POST" onsubmit="showLoading(this)">
 
-            @csrf
+<style>
 
-            <div class="form-group">
-              <input type="text" class="form-control" name="name" placeholder="Full Name" value="{{ old('name') }}">
-              @error('name')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
+body{
+    background:#f5f6fa;
+    font-family: 'Poppins', sans-serif;
+}
 
-            <div class="form-group">
-              <input type="email" class="form-control" name="email" placeholder="Email Address" value="{{ old('email') }}">
-              @error('email')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
+.register-wrapper{
+    width:100%;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
-            <div class="form-group">
-                <input type="text" class="form-control" name="phone" placeholder="Phone Number" value="{{ old('phone') }}">
-                @error('phone')
-                  <small class="text-danger">{{ $message }}</small>
-                @enderror
-              </div>
+.register-card{
+    width:900px;
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
+    display:flex;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+}
 
-            <div class="form-group">
-              <input type="password" class="form-control" name="password" placeholder="Password">
-              @error('password')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
+/* LEFT SIDE */
 
-            <div class="form-group">
-              <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
-              @error('confirm_password')
-                <small class="text-danger">{{ $message }}</small>
-              @enderror
-            </div>
+.register-left{
+    width:40%;
+    background:#FFC107;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+    text-align:center;
+}
+
+.register-left img{
+    width:120px;
+    margin-bottom:20px;
+}
+
+.register-left h3{
+    font-weight:600;
+}
+
+.register-left p{
+    font-size:14px;
+}
+
+/* RIGHT SIDE */
+
+.register-right{
+    width:60%;
+    padding:50px;
+}
+
+.form-control{
+    border-radius:10px;
+    height:45px;
+    box-shadow:none;
+}
+
+.btn-register{
+    background:#00c9a7;
+    border:none;
+    padding:12px;
+    width:100%;
+    border-radius:10px;
+    color:#fff;
+    font-weight:600;
+}
+
+.btn-register:hover{
+    background:#00b89a;
+}
+
+</style>
+
+<body>
+
+<div class="register-wrapper">
+
+<div class="register-card">
+
+<!-- LEFT PANEL -->
+
+<div class="register-left">
+
+<img src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
+
+<h3>Let's get you set up</h3>
+
+<p>
+It should only take a couple of minutes
+to create your account.
+</p>
+
+</div>
 
 
-            <div class="text-center">
-              <button type="submit" class="btn btn-main text-center" id="submitBtn">
-                Sign Up
-              </button>
-            </div>
-          </form>
-          <p class="mt-20">Already have an account? <a href="{{ route('customer.login') }}">Login</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- RIGHT PANEL -->
+
+<div class="register-right">
+
+<h3 class="mb-4">Create Your Account</h3>
+
+<form action="{{ route('customer.register.process') }}" method="POST" onsubmit="showLoading(this)">
+@csrf
+
+<div class="form-group mb-3">
+<input type="text" class="form-control" name="name" placeholder="Full Name" value="{{ old('name') }}">
+@error('name')
+<small class="text-danger">{{ $message }}</small>
+@enderror
+</div>
+
+<div class="form-group mb-3">
+<input type="email" class="form-control" name="email" placeholder="Email Address" value="{{ old('email') }}">
+@error('email')
+<small class="text-danger">{{ $message }}</small>
+@enderror
+</div>
+
+<div class="form-group mb-3">
+<input type="text" class="form-control" name="phone" placeholder="Phone Number" value="{{ old('phone') }}">
+@error('phone')
+<small class="text-danger">{{ $message }}</small>
+@enderror
+</div>
+
+<div class="form-group mb-3">
+<input type="password" class="form-control" name="password" placeholder="Password">
+@error('password')
+<small class="text-danger">{{ $message }}</small>
+@enderror
+</div>
+
+<div class="form-group mb-4">
+<input type="password" class="form-control" name="password_confirmation" placeholder="Confirm Password">
+</div>
+
+<button type="submit" class="btn-register" id="submitBtn">
+Sign Up
+</button>
+
+</form>
+
+<p class="mt-3 text-center">
+Already have an account?
+<a href="{{ route('customer.login') }}">Login</a>
+</p>
+
+</div>
+
+</div>
+</div>
+
 
 <script>
-  function showLoading(form) {
-    const submitButton = form.querySelector("#submitBtn");
-    submitButton.disabled = true;
-    submitButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...`;
-    return true;
-  }
+function showLoading(form) {
+const btn = form.querySelector("#submitBtn");
+btn.disabled = true;
+btn.innerHTML = "Processing...";
+return true;
+}
 </script>
+
 </body>
 </html>

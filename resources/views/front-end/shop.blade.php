@@ -139,7 +139,7 @@ $(document).ready(function() {
    
 const viewProduct = (id) => {
     // បង្ហាញ loading
-    $('#loading-overlay').show();
+   
     $('#product-modal').modal('show'); 
 
     $.ajax({
@@ -181,13 +181,7 @@ const viewProduct = (id) => {
                 $('.view-product').html(productHTML);
             }
         },
-        // error: function() {
-        //     $('.view-product').html('<p class="text-danger">Something went wrong!</p>');
-        // },
-        complete: function() {
-            // លាក់ loading នៅពេល AJAX បញ្ចប់
-            $('#loading-overlay').hide();
-        }
+
     });
 }
 

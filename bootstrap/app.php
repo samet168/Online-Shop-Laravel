@@ -2,6 +2,8 @@
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdminMiddlewareRedirect;
+use App\Http\Middleware\Custommer\CustomerMiddleware;
+use App\Http\Middleware\Custommer\CustomerRedirect;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,7 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         $middleware->alias([
             'guest.admin' => AdminMiddlewareRedirect::class,
-            'auth.admin'=> AdminMiddleware::class
+            'auth.admin'=> AdminMiddleware::class,
+            'guest.customer' => CustomerRedirect::class,
+            'auth.customer' => CustomerRedirect::class
             
         ]);
     })

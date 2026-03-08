@@ -1,8 +1,9 @@
-@extends('front-end.components.master')
-@section('contents')
-                <div id="global-loading" style="display:none;">
+<div id="global-loading" style="display:none;">
     <div class="spinner"></div>
 </div>
+@extends('front-end.components.master')
+@section('contents')
+
 <section class="single-product">
 	<div class="container">
 		<div class="row">
