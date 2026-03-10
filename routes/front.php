@@ -39,17 +39,17 @@ Route::middleware('guest.customer')->group(function(){
 });
 
 
-// Route::middleware('auth.customer')->group(function(){
+Route::middleware('auth.customer')->group(function(){
 
-//     Route::name('cart.')->group(function(){
-//         Route::get('/cart/view',[CartController::class,'index'])->name('list');
-//         Route::get('/cart/add/{id}',[CartController::class,'add'])->name('add');
-//         Route::get('/cart/remove/{id}',[CartController::class,'remove'])->name('remove');
-//         Route::post('cart/update',[CartController::class,'update'])->name('update');
-//     });
+    Route::name('cart.')->group(function(){
+        Route::get('/cart/view',[CartController::class,'index'])->name('list');
+        Route::get('/cart/add/{id}',[CartController::class,'add'])->name('add');
+        Route::get('/cart/remove/{id}',[CartController::class,'remove'])->name('remove');
+        Route::post('cart/update',[CartController::class,'update'])->name('update');
+    });
 
-//     Route::name('checkout.')->group(function(){
-//         Route::get('/checkout',[CheckoutController::class,'index'])->name('index');
-//     });
+    Route::name('checkout.')->group(function(){
+        Route::get('/checkout',[CheckoutController::class,'index'])->name('index');
+    });
 
-// });
+});

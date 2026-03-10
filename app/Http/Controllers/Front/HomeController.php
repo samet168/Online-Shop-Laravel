@@ -22,11 +22,7 @@ class HomeController extends Controller
 
         // Load home page view with categories and products data
         return view('front-end.index',$data);
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $data ,
-        //     'product'=> $products
-        // ]);
+
 
     }
 

@@ -34,7 +34,7 @@
 						<a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><i
 								class="tf-ion-android-cart"></i>Cart</a>
 						<div class="dropdown-menu cart-dropdown">
-							<!-- Cart Item -->
+							{{-- <!-- Cart Item -->
 							<div class="media">
 								<a class="pull-left" href="#!">
 									<img class="media-object" src="images/shop/cart/cart-1.jpg" alt="image" />
@@ -48,34 +48,38 @@
 									<h5><strong>$1200</strong></h5>
 								</div>
 								<a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-							</div><!-- / Cart Item -->
-							<!-- Cart Item -->
-							<div class="media">
-								<a class="pull-left" href="#!">
-									<img class="media-object" src="images/shop/cart/cart-2.jpg" alt="image" />
-								</a>
-								<div class="media-body">
-									<h4 class="media-heading"><a href="#!">Ladies Bag</a></h4>
-									<div class="cart-price">
-										<span>1 x</span>
-										<span>1250.00</span>
-									</div>
-									<h5><strong>$1200</strong></h5>
-								</div>
-								<a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-							</div><!-- / Cart Item -->
-
-							<div class="cart-summary">
-								<span>Total</span>
-								<span class="total-price">$1799.00</span>
 							</div>
-							<ul class="text-center cart-buttons">
-								<li><a href="cart.html" class="btn btn-small">View Cart</a></li>
-								<li><a href="checkout.html" class="btn btn-small btn-solid-border">Checkout</a></li>
-							</ul>
-						</div>
+							<!-- / Cart Item --> --}}
 
-					</li><!-- / Cart -->
+							<!-- Cart Item -->
+					@foreach($items->slice(max(0, $items->count() - 3)) as $item)
+						@php $image = $item->attributes->image ?? 'default.png'; @endphp
+						<div class="media">
+							<a class="pull-left" href="#!">
+								<img class="media-object" src="{{ asset('uploads/product/'.$image) }}" alt="{{ $item->name }}" />
+							</a>
+							<div class="media-body">
+								<h4 class="media-heading"><a href="#!">{{ $item->name }}</a></h4>
+								<div class="cart-price">
+									<span>{{ $item->quantity }}</span>
+									<span>${{ $item->price }}</span>
+								</div>
+							</div>
+							<a href="{{ route('cart.remove', $item->id) }}" class="remove"><i class="tf-ion-close"></i></a>
+						</div>
+					@endforeach
+
+					<!-- Cart summary outside loop -->
+					<div class="cart-summary">
+						<span>Total</span>
+						<span class="total-price">${{ Cart::getTotal() }}</span>
+					</div>
+
+					<ul class="text-center cart-buttons">
+						<li><a href="{{ route('cart.list') }}" class="btn btn-small">View Cart</a></li>
+						<li><a href="{{ route('checkout.index') }}" class="btn btn-small btn-solid-border">Checkout</a></li>
+					</ul>
+					<!-- / Cart -->
 
 					<!-- Search -->
 					<li class="dropdown search dropdown-slide">
